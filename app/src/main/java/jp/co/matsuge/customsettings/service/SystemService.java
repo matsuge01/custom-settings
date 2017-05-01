@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
+import android.support.v4.app.NotificationCompat;
 
 import jp.co.matsuge.customsettings.R;
 import jp.co.matsuge.customsettings.receiver.SystemReceiver;
@@ -77,7 +78,8 @@ public class SystemService extends Service {
                     context,
                     getString(R.string.notification_monitor_title),
                     getString(R.string.notification_monitor_text),
-                    android.R.drawable.stat_sys_headset);
+                    android.R.drawable.stat_sys_headset,
+                    NotificationCompat.PRIORITY_DEFAULT);
 
             startForeground(NotificationUtils.MONITOR_NOTIFICATION_ID, n);
         }

@@ -14,21 +14,20 @@ public class NotificationUtils {
     public static final int MONITOR_NOTIFICATION_ID = 1;
 
     public static Notification getNotificationBuilder(
-            Context context, @NonNull String title, String text, @NonNull int icon) {
+            Context context, @NonNull String title, String text, @NonNull int icon,
+            int priority) {
 
         NotificationCompat.Builder n = new NotificationCompat.Builder(context);
 
         n.setColor(ContextCompat.getColor(context, R.color.colorPrimary));
-
         n.setContentTitle(title);
+        n.setSmallIcon(icon);
+        n.setPriority(priority);
 
         if (!TextUtils.isEmpty(text)) {
             n.setContentText(text);
         }
 
-        n.setSmallIcon(icon);
-
         return n.build();
     }
-
 }
