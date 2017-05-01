@@ -1,3 +1,13 @@
 <resources>
-    <string name="app_name">CustomSettings</string>
+    <string name="app_name">カスタム設定</string>
+
+    <string name="notification_monitor_title">操作の監視が開始されました</string>
+    <string name="notification_monitor_text">監視を終了するにはこの通知をタップしてアプリを起動してください。</string>
+
+    <string name="monitor_title">カスタム設定監視</string>
+    <string name="monitor_summary">この設定をONにすると、常時ユーザー操作を監視し、カスタム設定に役立つ機能を提供します。</string>
+
+    <string name="earphone_title">イヤホン挿入</string>
+    <string name="earphone_summary">イヤホンを挿入した時に、自動で起動したい音楽アプリを設定します。</string>
+
 </resources>

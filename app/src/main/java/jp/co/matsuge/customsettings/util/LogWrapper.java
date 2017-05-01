@@ -13,6 +13,12 @@ public class LogWrapper {
         }
     }
 
+    public static void w(String m) {
+        if (BuildConfig.DEBUG) {
+            Log.w(Common.TAG, m);
+        }
+    }
+
     public static void e(String m) {
         if (BuildConfig.DEBUG) {
             Log.e(Common.TAG, m);

@@ -1,5 +1,6 @@
 package jp.co.matsuge.customsettings.service;
 
+import android.app.Notification;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -7,8 +8,10 @@ import android.content.IntentFilter;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 
+import jp.co.matsuge.customsettings.R;
 import jp.co.matsuge.customsettings.receiver.SystemReceiver;
 import jp.co.matsuge.customsettings.util.LogWrapper;
+import jp.co.matsuge.customsettings.util.NotificationUtils;
 
 public class SystemService extends Service {
 
@@ -40,7 +43,6 @@ public class SystemService extends Service {
         LogWrapper.d(TAG + "#onStartCommand");
 
         if (intent == null) {
-            registerReceiver(getApplicationContext());
             return START_STICKY;
         }
 
@@ -70,6 +72,14 @@ public class SystemService extends Service {
 
             mSystemReceiver = new SystemReceiver();
             context.registerReceiver(mSystemReceiver, filter);
+
+            Notification n = NotificationUtils.getNotificationBuilder(
+                    context,
+                    getString(R.string.notification_monitor_title),
+                    getString(R.string.notification_monitor_text),
+                    android.R.drawable.stat_sys_headset);
+
+            startForeground(NotificationUtils.MONITOR_NOTIFICATION_ID, n);
         }
     }
 

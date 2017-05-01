@@ -23,7 +23,8 @@
 
         <receiver
             android:name=".receiver.SystemReceiver"
-            android:exported="false" />
+            android:exported="false" >
+        </receiver>
 
     </application>
 

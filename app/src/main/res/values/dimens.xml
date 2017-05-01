@@ -1,0 +1,9 @@
+<resources>
+
+    <dimen name="layout_item_margin">10dp</dimen>
+    <dimen name="layout_item_padding">15dp</dimen>
+
+    <dimen name="main_activity_title_size">16sp</dimen>
+    <dimen name="main_activity_summary_size">13sp</dimen>
+
+</resources>
