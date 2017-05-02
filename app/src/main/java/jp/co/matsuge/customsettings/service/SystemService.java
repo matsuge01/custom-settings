@@ -78,7 +78,7 @@ public class SystemService extends Service {
                     context,
                     getString(R.string.notification_monitor_title),
                     getString(R.string.notification_monitor_text),
-                    android.R.drawable.stat_sys_headset,
+                    R.drawable.ic_stat_settings,
                     NotificationCompat.PRIORITY_DEFAULT);
 
             startForeground(NotificationUtils.MONITOR_NOTIFICATION_ID, n);

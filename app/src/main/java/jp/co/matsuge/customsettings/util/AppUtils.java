@@ -5,8 +5,11 @@ import android.app.ActivityManager;
 import android.app.ActivityManager.RunningServiceInfo;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
+import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.pm.ResolveInfo;
+import android.graphics.drawable.Drawable;
 
 import java.util.List;
 
@@ -71,6 +74,22 @@ public class AppUtils {
         intent.addCategory(category);
 
         return pm.queryIntentActivities(intent, 0);
+    }
+
+    public static Drawable getPackageNameIcon(Context context, String name) {
+        PackageManager pm = context.getPackageManager();
+        ApplicationInfo info;
+        Drawable icon = null;
+
+        try {
+            info = pm.getApplicationInfo(name, 0);
+            icon = info.loadIcon(pm);
+
+        } catch (NameNotFoundException e) {
+            LogWrapper.e(TAG + "#CustomAdapter getView package name not found");
+        }
+
+        return icon;
     }
 
     private static boolean isServiceRunning(Context context, String name) {

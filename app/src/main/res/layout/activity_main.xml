@@ -13,7 +13,7 @@
         android:layout_marginEnd="@dimen/layout_item_margin"
         android:layout_marginStart="@dimen/layout_item_margin"
         android:layout_marginTop="@dimen/layout_item_margin"
-        android:background="@drawable/shape_corners"
+        android:background="@drawable/item_selector"
         android:elevation="5dp"
         android:orientation="vertical"
         android:padding="@dimen/layout_item_padding">
@@ -29,7 +29,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_marginEnd="@dimen/layout_item_margin"
-                android:layout_weight="7"
+                android:layout_weight="8"
                 android:orientation="vertical">
 
                 <TextView
@@ -48,24 +48,33 @@
 
             </LinearLayout>
 
-            <Switch
-                android:id="@+id/monitor_mode"
+            <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:layout_weight="3" />
+                android:layout_weight="2"
+                android:gravity="center_horizontal"
+                android:orientation="horizontal">
 
+                <Switch
+                    android:id="@+id/monitor_mode"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+            </LinearLayout>
         </LinearLayout>
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/earphone_item"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/layout_item_margin"
         android:layout_marginStart="@dimen/layout_item_margin"
         android:layout_marginTop="@dimen/layout_item_margin"
-        android:background="@drawable/shape_corners"
+        android:background="@drawable/item_selector"
         android:elevation="5dp"
+        android:onClick="onBtnClick"
         android:orientation="vertical"
         android:padding="@dimen/layout_item_padding">
 
@@ -80,7 +89,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_marginEnd="@dimen/layout_item_margin"
-                android:layout_weight="7"
+                android:layout_weight="8"
                 android:orientation="vertical">
 
                 <TextView
@@ -99,14 +108,21 @@
 
             </LinearLayout>
 
-            <Button
-                android:id="@+id/music_btn"
+            <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:onClick="onBtnClick"
-                android:layout_weight="3" />
+                android:layout_weight="2"
+                android:gravity="center_horizontal"
+                android:orientation="horizontal">
 
+                <ImageView
+                    android:id="@+id/music_icon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_music_not_set" />
+
+            </LinearLayout>
         </LinearLayout>
     </LinearLayout>
 

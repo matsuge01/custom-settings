@@ -6,4 +6,7 @@
 
     <color name="layout_background">#E0E0E0</color>
 
+    <color name="item_pressed_white">#ffa000</color>
+
+
 </resources>
