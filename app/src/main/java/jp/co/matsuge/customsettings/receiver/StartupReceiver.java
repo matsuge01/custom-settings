@@ -23,7 +23,7 @@ public class StartupReceiver extends BroadcastReceiver {
         switch (action) {
             case Intent.ACTION_BOOT_COMPLETED:
             case Intent.ACTION_MY_PACKAGE_REPLACED:
-                boolean mode = PrefsUtils.getPrefsParameter(context,
+                boolean mode = PrefsUtils.getParameter(context,
                         PrefsUtils.APP_PREFS, PrefsUtils.MONITOR_MODE, false);
 
                 LogWrapper.d(TAG + "#onReceive mode = " + mode);

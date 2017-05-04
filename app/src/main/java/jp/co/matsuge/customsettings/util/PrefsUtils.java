@@ -11,41 +11,43 @@ public class PrefsUtils {
     public static final String APP_PREFS = "app_prefs";
     public static final String MONITOR_MODE = "monitor_mode";
 
-    public static final String EARPHONE_SETTING_NAME = "earphone_setting_name";
-    public static final String EARPHONE_SETTING_PACKAGENAME = "earphone_setting_packagename";
+    public static final String EARPHONE_SETTING_APP_NAME = "earphone_setting_app_name";
+    public static final String EARPHONE_SETTING_PACKAGE_NAME = "earphone_setting_package_name";
 
 
-    private static SharedPreferences getSharedPreferencesPrivate(Context c, String f) {
+    public static SharedPreferences getSharedPreferences(Context c, String f) {
         return c.getSharedPreferences(f, Context.MODE_PRIVATE);
     }
 
-    public static void setPrefsParameter(Context c, String f, String n, boolean v) {
-        getSharedPreferencesPrivate(c, f).edit().putBoolean(n, v).apply();
+    public static void setParameter(Context c, String f, String n, boolean v) {
+        getSharedPreferences(c, f).edit().putBoolean(n, v).commit();
     }
 
-    public static boolean getPrefsParameter(Context c, String f, String n, boolean d) {
-        return getSharedPreferencesPrivate(c, f).getBoolean(n, d);
+    public static boolean getParameter(Context c, String f, String n, boolean d) {
+        return getSharedPreferences(c, f).getBoolean(n, d);
     }
 
-    public static void setPrefsParameter(Context c, String f, String n, int v) {
-        getSharedPreferencesPrivate(c, f).edit().putInt(n, v).apply();
-    }
-    public static int getPrefsParameter(Context c, String f, String n, int d) {
-        return getSharedPreferencesPrivate(c, f).getInt(n, d);
+    public static void setParameter(Context c, String f, String n, int v) {
+        getSharedPreferences(c, f).edit().putInt(n, v).commit();
     }
 
-    public static void setPrefsParameter(Context c, String f, String n, String v) {
-        getSharedPreferencesPrivate(c, f).edit().putString(n, v).apply();
-    }
-    public static String getPrefsParameter(Context c, String f, String n, String d) {
-        return getSharedPreferencesPrivate(c, f).getString(n, d);
+    public static int getParameter(Context c, String f, String n, int d) {
+        return getSharedPreferences(c, f).getInt(n, d);
     }
 
-    public static void setPrefsParameter(Context c, String f, String n, long v) {
-        getSharedPreferencesPrivate(c, f).edit().putLong(n, v).apply();
+    public static void setParameter(Context c, String f, String n, String v) {
+        getSharedPreferences(c, f).edit().putString(n, v).commit();
     }
 
-    public static void setPrefsParameter(Context c, String f, String n, float v) {
-        getSharedPreferencesPrivate(c, f).edit().putFloat(n, v).apply();
+    public static String getParameter(Context c, String f, String n, String d) {
+        return getSharedPreferences(c, f).getString(n, d);
+    }
+
+    public static void setParameter(Context c, String f, String n, long v) {
+        getSharedPreferences(c, f).edit().putLong(n, v).commit();
+    }
+
+    public static void setParameter(Context c, String f, String n, float v) {
+        getSharedPreferences(c, f).edit().putFloat(n, v).commit();
     }
 }

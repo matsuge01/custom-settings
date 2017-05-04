@@ -24,14 +24,17 @@ public class SystemReceiver extends BroadcastReceiver {
             case Intent.ACTION_HEADSET_PLUG:
                 doHeadSetPlug(context, intent);
                 break;
+
+            default:
+                break;
         }
     }
 
     private void doHeadSetPlug(Context context, Intent intent) {
         int state = intent.getIntExtra("state", -1);
         if (state > 0) {
-            String packageName = PrefsUtils.getPrefsParameter(context,
-                    PrefsUtils.APP_PREFS, PrefsUtils.EARPHONE_SETTING_PACKAGENAME, null);
+            String packageName = PrefsUtils.getParameter(context,
+                    PrefsUtils.APP_PREFS, PrefsUtils.EARPHONE_SETTING_PACKAGE_NAME, null);
 
             if (!TextUtils.isEmpty(packageName)) {
                 AppUtils.startApplication(context, packageName);

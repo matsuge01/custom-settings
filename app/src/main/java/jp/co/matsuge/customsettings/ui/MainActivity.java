@@ -2,14 +2,17 @@ package jp.co.matsuge.customsettings.ui;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.CompoundButton;
+import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.Toast;
 
@@ -30,12 +33,21 @@ public class MainActivity extends AppCompatActivity {
 
     public static final String TAG = "MainActivity";
 
+    private Switch mMonitorSwitch;
+    private ImageView mMusicIcon;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         LogWrapper.d(TAG + "#onCreate");
 
         setContentView(R.layout.activity_main);
+
+        mMonitorSwitch = (Switch) findViewById(R.id.monitor_mode);
+        mMusicIcon = (ImageView) findViewById(R.id.music_icon);
+
+        PrefsUtils.getSharedPreferences(getApplication(), PrefsUtils.APP_PREFS)
+                .registerOnSharedPreferenceChangeListener(mPrefsListener);
     }
 
     @Override
@@ -43,20 +55,45 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
         LogWrapper.d(TAG + "#onResume");
 
-        Switch monitorMode = (Switch) findViewById(R.id.monitor_mode);
-
-        boolean mode = PrefsUtils.getPrefsParameter(getApplicationContext(),
-                PrefsUtils.APP_PREFS, PrefsUtils.MONITOR_MODE, false);
-        LogWrapper.d(TAG + "#onResume mode = " + mode);
-
-        monitorMode.setChecked(mode);
-        monitorMode.setOnCheckedChangeListener(mMonitorModeListener);
+        updateUiMonitorSwitch();
+        updateUiMusicIcon();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
         LogWrapper.d(TAG + "#onDestroy");
+
+        PrefsUtils.getSharedPreferences(getApplication(), PrefsUtils.APP_PREFS)
+                .unregisterOnSharedPreferenceChangeListener(mPrefsListener);
+    }
+
+
+    private void updateUiMonitorSwitch() {
+        boolean mode = PrefsUtils.getParameter(getApplicationContext(),
+                PrefsUtils.APP_PREFS, PrefsUtils.MONITOR_MODE, false);
+
+        LogWrapper.d(TAG + "#updateUiMonitorSwitch mode = " + mode);
+
+        mMonitorSwitch.setChecked(mode);
+        mMonitorSwitch.setOnCheckedChangeListener(mMonitorModeListener);
+    }
+
+    private void updateUiMusicIcon() {
+        String packageName = PrefsUtils.getParameter(getApplication(),
+                PrefsUtils.APP_PREFS, PrefsUtils.EARPHONE_SETTING_PACKAGE_NAME, null);
+
+        LogWrapper.d(TAG + "#updateUiMusicIcon packageName = " + packageName);
+
+        if (TextUtils.isEmpty(packageName)) {
+            mMusicIcon.setBackgroundResource(R.drawable.ic_music_not_set);
+            mMusicIcon.refreshDrawableState();
+
+        } else {
+            Drawable icon = AppUtils.getPackageNameIcon(getApplicationContext(), packageName);
+            mMusicIcon.setBackground(icon);
+            mMusicIcon.refreshDrawableState();
+        }
     }
 
     public void onBtnClick(View view) {
@@ -70,7 +107,8 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onCheckedChanged(CompoundButton compoundButton, boolean check) {
             LogWrapper.d(TAG + "#onCheckedChanged check = " + check);
-            PrefsUtils.setPrefsParameter(getApplicationContext(),
+
+            PrefsUtils.setParameter(getApplicationContext(),
                     PrefsUtils.APP_PREFS, PrefsUtils.MONITOR_MODE, check);
 
             if (check) {
@@ -82,6 +120,19 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     };
+
+    private SharedPreferences.OnSharedPreferenceChangeListener mPrefsListener
+            = new SharedPreferences.OnSharedPreferenceChangeListener() {
+        public void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
+
+            LogWrapper.d(TAG + "#onSharedPreferenceChanged key = " + key);
+
+            if (key.equals(PrefsUtils.EARPHONE_SETTING_PACKAGE_NAME)) {
+                updateUiMusicIcon();
+            }
+        }
+    };
+
 
     private void showMusicAppDialog() {
         List<ResolveInfo> appList = AppUtils.getTargetPackageList(
@@ -98,26 +149,22 @@ public class MainActivity extends AppCompatActivity {
                 .build());
 
         for (ResolveInfo app : appList) {
-            CharSequence name = app.activityInfo.loadLabel(pm);
+            CharSequence appName = app.activityInfo.loadLabel(pm);
             String packageName = app.activityInfo.packageName;
             Drawable icon = app.activityInfo.loadIcon(pm);
 
             mAdapter.add(new MaterialSimpleListItem.Builder(this)
-                    .content(name)
+                    .content(appName)
                     .tag(packageName)
                     .icon(icon)
                     .backgroundColor(Color.WHITE)
                     .build());
-
-            LogWrapper.d(TAG + "#onBtnClick name = " + name);
-            LogWrapper.d(TAG + "#onBtnClick packageName = " + packageName);
         }
 
         new MaterialDialog.Builder(this)
                 .title(R.string.earphone_app_select_dialog_title)
                 .adapter(mAdapter, null)
                 .show();
-
     }
 
     final MaterialSimpleListAdapter mAdapter = new MaterialSimpleListAdapter(
@@ -126,22 +173,20 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onMaterialListItemSelected(MaterialDialog dialog, int index,
                                                        MaterialSimpleListItem item) {
-
-                    LogWrapper.d(TAG + "#onMaterialListItemSelected index = " + index);
-                    LogWrapper.d(TAG + "#onMaterialListItemSelected Content = " + item.getContent());
-                    LogWrapper.d(TAG + "#onMaterialListItemSelected Tag = " + item.getTag());
-
                     Context context = getApplicationContext();
-                    String aName = (String) item.getContent();
-                    String pName = (String) item.getTag();
+                    String appName = (String) item.getContent();
+                    String packageName = (String) item.getTag();
 
-                    PrefsUtils.setPrefsParameter(context, PrefsUtils.APP_PREFS,
-                            PrefsUtils.EARPHONE_SETTING_NAME, aName);
-                    PrefsUtils.setPrefsParameter(context, PrefsUtils.APP_PREFS,
-                            PrefsUtils.EARPHONE_SETTING_PACKAGENAME, pName);
+                    LogWrapper.d(TAG + "#onMaterialListItemSelected appName = " + appName);
+                    LogWrapper.d(TAG + "#onMaterialListItemSelected packageName = " + packageName);
 
-                    String message = aName + getString(R.string.earphone_success_toast);
-                    Toasty.success(context, message, Toast.LENGTH_LONG, true).show();
+                    PrefsUtils.setParameter(context, PrefsUtils.APP_PREFS,
+                            PrefsUtils.EARPHONE_SETTING_APP_NAME, appName);
+                    PrefsUtils.setParameter(context, PrefsUtils.APP_PREFS,
+                            PrefsUtils.EARPHONE_SETTING_PACKAGE_NAME, packageName);
+
+                    String message = appName + getString(R.string.earphone_success_toast);
+                    Toasty.success(context, message, Toast.LENGTH_SHORT, true).show();
 
                     dialog.dismiss();
                 }

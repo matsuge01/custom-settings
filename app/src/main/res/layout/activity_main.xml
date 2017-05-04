@@ -118,9 +118,8 @@
 
                 <ImageView
                     android:id="@+id/music_icon"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/ic_music_not_set" />
+                    android:layout_width="@dimen/main_activity_music_icon_size"
+                    android:layout_height="@dimen/main_activity_music_icon_size" />
 
             </LinearLayout>
         </LinearLayout>
