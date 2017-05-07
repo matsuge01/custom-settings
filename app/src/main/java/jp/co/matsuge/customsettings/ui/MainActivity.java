@@ -7,19 +7,26 @@ import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Switch;
 import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.simplelist.MaterialSimpleListAdapter;
 import com.afollestad.materialdialogs.simplelist.MaterialSimpleListItem;
+import com.squareup.okhttp.OkHttpClient;
+import com.squareup.okhttp.Request;
+import com.squareup.okhttp.Response;
 
+import java.io.IOException;
 import java.util.List;
 
 import es.dmoral.toasty.Toasty;
@@ -35,6 +42,8 @@ public class MainActivity extends AppCompatActivity {
 
     private Switch mMonitorSwitch;
     private ImageView mMusicIcon;
+    private LinearLayout mEarphoneItem;
+    private LinearLayout mPocketWifiItem;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,11 +52,47 @@ public class MainActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_main);
 
+        mEarphoneItem = (LinearLayout) findViewById(R.id.earphone_item);
+        mPocketWifiItem = (LinearLayout) findViewById(R.id.pocket_wifi_item);
+
         mMonitorSwitch = (Switch) findViewById(R.id.monitor_mode);
         mMusicIcon = (ImageView) findViewById(R.id.music_icon);
 
         PrefsUtils.getSharedPreferences(getApplication(), PrefsUtils.APP_PREFS)
                 .registerOnSharedPreferenceChangeListener(mPrefsListener);
+
+        new AsyncTask<Void, Void, String>() {
+            @Override
+            protected String doInBackground(Void... params) {
+                String result = null;
+
+                // リクエストオブジェクトを作って
+                Request request = new Request.Builder()
+                        .url("http://192.168.128.1/goform/goform_get_cmd_process?cmd=battery_value")
+                        .header("Referer", "http://192.168.128.1/index.html")
+                        .get()
+                        .build();
+
+                // クライアントオブジェクトを作って
+                OkHttpClient client = new OkHttpClient();
+
+                // リクエストして結果を受け取って
+                try {
+                    Response response = client.newCall(request).execute();
+                    result = response.body().string();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                // 返す
+                return result;
+            }
+
+            @Override
+            protected void onPostExecute(String result) {
+                Log.d(TAG, result);
+            }
+        }.execute();
     }
 
     @Override
@@ -77,6 +122,13 @@ public class MainActivity extends AppCompatActivity {
 
         mMonitorSwitch.setChecked(mode);
         mMonitorSwitch.setOnCheckedChangeListener(mMonitorModeListener);
+
+        updateUiItemArea(mode);
+    }
+
+    private void updateUiItemArea(boolean mode) {
+        mEarphoneItem.setVisibility(mode ? View.VISIBLE : View.GONE);
+        mPocketWifiItem.setVisibility(mode ? View.VISIBLE : View.GONE);
     }
 
     private void updateUiMusicIcon() {
@@ -97,8 +149,18 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onBtnClick(View view) {
-        if (view.getId() == R.id.earphone_item) {
-            showMusicAppDialog();
+        int id = view.getId();
+
+        switch (id) {
+            case R.id.earphone_item:
+                showMusicAppDialog();
+                break;
+
+            case R.id.pocket_wifi_item:
+                break;
+
+            default:
+                break;
         }
     }
 
@@ -110,6 +172,8 @@ public class MainActivity extends AppCompatActivity {
 
             PrefsUtils.setParameter(getApplicationContext(),
                     PrefsUtils.APP_PREFS, PrefsUtils.MONITOR_MODE, check);
+
+            updateUiItemArea(check);
 
             if (check) {
                 AppUtils.startInAppService(getApplicationContext(), SystemService.class,

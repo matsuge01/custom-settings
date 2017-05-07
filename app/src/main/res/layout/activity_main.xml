@@ -125,4 +125,51 @@
         </LinearLayout>
     </LinearLayout>
 
+    <LinearLayout
+        android:id="@+id/pocket_wifi_item"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/layout_item_margin"
+        android:layout_marginStart="@dimen/layout_item_margin"
+        android:layout_marginTop="@dimen/layout_item_margin"
+        android:background="@drawable/item_selector"
+        android:elevation="5dp"
+        android:onClick="onBtnClick"
+        android:orientation="vertical"
+        android:padding="@dimen/layout_item_padding">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="10">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginEnd="@dimen/layout_item_margin"
+                android:layout_weight="10"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/pocket_wifi_title"
+                    android:textSize="@dimen/main_activity_title_size"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="@string/pocket_wifi_summary"
+                    android:textSize="@dimen/main_activity_summary_size" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+    </LinearLayout>
+
+
 </LinearLayout>

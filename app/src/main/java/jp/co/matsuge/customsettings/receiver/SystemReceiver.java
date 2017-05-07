@@ -3,6 +3,8 @@ package jp.co.matsuge.customsettings.receiver;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.net.NetworkInfo;
+import android.net.wifi.WifiManager;
 import android.text.TextUtils;
 
 import jp.co.matsuge.customsettings.util.AppUtils;
@@ -25,6 +27,10 @@ public class SystemReceiver extends BroadcastReceiver {
                 doHeadSetPlug(context, intent);
                 break;
 
+            case WifiManager.NETWORK_STATE_CHANGED_ACTION:
+                doNetworkStateChange(context, intent);
+                break;
+
             default:
                 break;
         }
@@ -40,5 +46,12 @@ public class SystemReceiver extends BroadcastReceiver {
                 AppUtils.startApplication(context, packageName);
             }
         }
+    }
+
+    private void doNetworkStateChange(Context context, Intent intent) {
+        NetworkInfo netInfo = intent.getParcelableExtra(WifiManager.EXTRA_NETWORK_INFO);
+
+        NetworkInfo.State state = netInfo.getState();
+        LogWrapper.d(TAG + "#onReceive doNetworkStateChange state = " + netInfo.toString());
     }
 }

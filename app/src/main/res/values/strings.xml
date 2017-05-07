@@ -12,6 +12,9 @@
     <string name="earphone_app_select_dialog_title">音楽アプリを選択</string>
     <string name="earphone_success_toast">を設定しました！</string>
 
+    <string name="pocket_wifi_title">ポケットWi-Fi</string>
+    <string name="pocket_wifi_summary">特定のポケットWi-Fiに接続中、電池残量によって通知をします。</string>
+
     <string name="close">閉じる</string>
 
 </resources>

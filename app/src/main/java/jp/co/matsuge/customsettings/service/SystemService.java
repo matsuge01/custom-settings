@@ -5,6 +5,7 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.net.wifi.WifiManager;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
@@ -70,6 +71,7 @@ public class SystemService extends Service {
         if (mSystemReceiver == null) {
             IntentFilter filter = new IntentFilter();
             filter.addAction(Intent.ACTION_HEADSET_PLUG);
+            filter.addAction(WifiManager.NETWORK_STATE_CHANGED_ACTION);
 
             mSystemReceiver = new SystemReceiver();
             context.registerReceiver(mSystemReceiver, filter);
