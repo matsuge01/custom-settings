@@ -14,6 +14,7 @@ public class PrefsUtils {
     public static final String EARPHONE_SETTING_APP_NAME = "earphone_setting_app_name";
     public static final String EARPHONE_SETTING_PACKAGE_NAME = "earphone_setting_package_name";
 
+    public static final String SSID_NAME = "ssid_name";
 
     public static SharedPreferences getSharedPreferences(Context c, String f) {
         return c.getSharedPreferences(f, Context.MODE_PRIVATE);

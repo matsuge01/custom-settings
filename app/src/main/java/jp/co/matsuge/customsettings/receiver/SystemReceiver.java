@@ -52,6 +52,12 @@ public class SystemReceiver extends BroadcastReceiver {
         NetworkInfo netInfo = intent.getParcelableExtra(WifiManager.EXTRA_NETWORK_INFO);
 
         NetworkInfo.State state = netInfo.getState();
+
+        String name = netInfo.getExtraInfo();
+
         LogWrapper.d(TAG + "#onReceive doNetworkStateChange state = " + netInfo.toString());
+        LogWrapper.d(TAG + "#onReceive doNetworkStateChange name = " + name);
+
+
     }
 }

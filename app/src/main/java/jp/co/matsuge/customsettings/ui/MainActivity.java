@@ -7,11 +7,10 @@ import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.InputType;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
@@ -22,13 +21,11 @@ import android.widget.Toast;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.simplelist.MaterialSimpleListAdapter;
 import com.afollestad.materialdialogs.simplelist.MaterialSimpleListItem;
-import com.squareup.okhttp.OkHttpClient;
-import com.squareup.okhttp.Request;
-import com.squareup.okhttp.Response;
 
-import java.io.IOException;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import es.dmoral.toasty.Toasty;
 import jp.co.matsuge.customsettings.R;
 import jp.co.matsuge.customsettings.service.SystemService;
@@ -40,10 +37,10 @@ public class MainActivity extends AppCompatActivity {
 
     public static final String TAG = "MainActivity";
 
-    private Switch mMonitorSwitch;
-    private ImageView mMusicIcon;
-    private LinearLayout mEarphoneItem;
-    private LinearLayout mPocketWifiItem;
+    @BindView(R.id.monitor_mode) Switch mMonitorSwitch;
+    @BindView(R.id.music_icon) ImageView mMusicIcon;
+    @BindView(R.id.earphone_item) LinearLayout mEarphoneItem;
+    @BindView(R.id.pocket_wifi_item) LinearLayout mPocketWifiItem;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,16 +48,12 @@ public class MainActivity extends AppCompatActivity {
         LogWrapper.d(TAG + "#onCreate");
 
         setContentView(R.layout.activity_main);
-
-        mEarphoneItem = (LinearLayout) findViewById(R.id.earphone_item);
-        mPocketWifiItem = (LinearLayout) findViewById(R.id.pocket_wifi_item);
-
-        mMonitorSwitch = (Switch) findViewById(R.id.monitor_mode);
-        mMusicIcon = (ImageView) findViewById(R.id.music_icon);
+        ButterKnife.bind(this);
 
         PrefsUtils.getSharedPreferences(getApplication(), PrefsUtils.APP_PREFS)
                 .registerOnSharedPreferenceChangeListener(mPrefsListener);
 
+        /*
         new AsyncTask<Void, Void, String>() {
             @Override
             protected String doInBackground(Void... params) {
@@ -93,6 +86,7 @@ public class MainActivity extends AppCompatActivity {
                 Log.d(TAG, result);
             }
         }.execute();
+        */
     }
 
     @Override
@@ -157,6 +151,7 @@ public class MainActivity extends AppCompatActivity {
                 break;
 
             case R.id.pocket_wifi_item:
+                showSsidEditDialog();
                 break;
 
             default:
@@ -229,6 +224,24 @@ public class MainActivity extends AppCompatActivity {
                 .title(R.string.earphone_app_select_dialog_title)
                 .adapter(mAdapter, null)
                 .show();
+    }
+
+    private void showSsidEditDialog() {
+
+        String ssid = PrefsUtils.getParameter(getApplication(), PrefsUtils.APP_PREFS,
+                PrefsUtils.SSID_NAME, "");
+
+        new MaterialDialog.Builder(this)
+                .title(R.string.dialog_ssid_title)
+                .inputType(InputType.TYPE_CLASS_TEXT)
+                .input(getString(R.string.dialog_ssid_hint), ssid,
+                        new MaterialDialog.InputCallback() {
+                            @Override
+                            public void onInput(MaterialDialog dialog, CharSequence input) {
+                                PrefsUtils.setParameter(getApplication(), PrefsUtils.APP_PREFS,
+                                        PrefsUtils.SSID_NAME, input.toString());
+                            }
+                        }).show();
     }
 
     final MaterialSimpleListAdapter mAdapter = new MaterialSimpleListAdapter(
